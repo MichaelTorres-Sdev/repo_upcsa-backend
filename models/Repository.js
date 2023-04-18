@@ -16,6 +16,10 @@ const RepositorySchema = Schema({
   tags: {
     type: [String],
   },
+  type: {
+    type: String,
+    required: true,
+  },
   status: {
     type: String,
     deafult: "en revisión",

@@ -23,8 +23,8 @@ const adminRoutes = require("./routes/admin.js");
 app.use("/api/user", userRoutes);
 app.use("/api/request", requestRoutes);
 app.use("/api/repository", repositoryRoutes);
-app.use("/api/admin", adminRoutes);
 app.use("/api/comment", commentRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.get("/", (req, res) => res.send("Hello World!"));
 app.listen(port, () => console.log(`App listening on port ${port}!`));

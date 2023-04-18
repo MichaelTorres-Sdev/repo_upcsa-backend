@@ -1,14 +1,6 @@
 const { Schema, model } = require("mongoose");
 
 const UserSchema = Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  surname: {
-    type: String,
-    required: true,
-  },
   nick: {
     type: String,
     required: true,
@@ -35,6 +27,10 @@ const UserSchema = Schema({
   image: {
     type: String,
     default: "default_user_image.png",
+  },
+  role: {
+    type: String,
+    required: true,
   },
   created_at: {
     type: Date,
