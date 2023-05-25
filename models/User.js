@@ -26,11 +26,12 @@ const UserSchema = Schema({
   },
   image: {
     type: String,
-    default: "default_user_image.png",
+    default: "tesla-head.svg",
   },
   role: {
     type: String,
     required: true,
+    default: "user",
   },
   created_at: {
     type: Date,
