@@ -72,4 +72,61 @@ const validateData = async (params) => {
   }
 };
 
-module.exports = { validateData, validateParams };
+const validateCommentParams = (params) => {
+  const allowedKeys = ["content", "rate", "repository"];
+
+  const result = Object.keys(params).every((key) => allowedKeys.includes(key));
+
+  return result;
+};
+
+const validateComment = (comment) => {
+  if (!validateCommentParams(comment)) {
+    return false;
+  }
+  if (![1, 2, 3, 4, 5].includes(parseInt(comment.rate))) {
+    return false;
+  }
+  return true;
+};
+
+const validateRepositoryParams = (params) => {
+  const allowedKeys = ["description", "title", "link", "tags", "type"];
+
+  const result = Object.keys(params).every((key) => allowedKeys.includes(key));
+
+  return result;
+};
+
+const validateRepository = (repository) => {
+  if (!validateRepositoryParams(repository)) {
+    return false;
+  }
+  let title = validator.isLength(repository.description, {
+    min: 5,
+    max: undefined,
+  });
+  let description = validator.isLength(repository.description, {
+    min: 5,
+    max: undefined,
+  });
+  let link = validator.isURL(repository.link);
+  let type = [
+    "proyecto de aula",
+    "proyecto de investigación",
+    "proyecto de grado",
+  ].includes(repository.type);
+
+  if (!title || !description || !link || !type) {
+    return false;
+  }
+
+  return true;
+};
+
+module.exports = {
+  validateData,
+  validateParams,
+  validateComment,
+  validateRepository,
+};

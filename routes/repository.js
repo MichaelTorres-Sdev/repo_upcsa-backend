@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 
 const repositoryController = require("../controllers/repository.js");
+const check = require("../middlewares/auth.js");
 
-router.get("/test", repositoryController.test);
+router.post("/create", check.auth, repositoryController.create);
 
 module.exports = router;
