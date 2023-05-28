@@ -22,7 +22,7 @@ const RepositorySchema = Schema({
   },
   status: {
     type: String,
-    default: "en revisión",
+    default: "creado",
   },
   user: {
     type: Schema.ObjectId,

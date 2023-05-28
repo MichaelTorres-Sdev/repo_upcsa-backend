@@ -7,12 +7,13 @@ const RequestSchema = Schema({
   },
   status: {
     type: String,
-    default: "created",
+    default: "creado",
   },
   reply: String,
   user: {
     type: Schema.ObjectId,
     ref: "User",
+    required: true,
   },
   admin: {
     type: Schema.ObjectId,
@@ -21,6 +22,7 @@ const RequestSchema = Schema({
   repository: {
     type: Schema.ObjectId,
     ref: "Repository",
+    required: true,
   },
 });
 

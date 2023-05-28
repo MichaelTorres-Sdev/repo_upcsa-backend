@@ -1,6 +1,7 @@
 const validator = require("validator");
 const fs = require("fs");
 
+//validate data when creating an user
 const validateParams = (params) => {
   const allowedKeys = [
     "email",
@@ -72,6 +73,7 @@ const validateData = async (params) => {
   }
 };
 
+//validate data when creating a comment
 const validateCommentParams = (params) => {
   const allowedKeys = ["content", "rate", "repository"];
 
@@ -90,6 +92,7 @@ const validateComment = (comment) => {
   return true;
 };
 
+//validate data when creating or updating a repository
 const validateRepositoryParams = (params) => {
   const allowedKeys = ["description", "title", "link", "tags", "type"];
 
@@ -125,9 +128,31 @@ const validateRepository = (repository) => {
 };
 
 const validateChangeStatus = (status) => {
-  // ! problem is here
   if (status != "aprobado" && status != "denegado") {
     console.log("problem");
+    return false;
+  }
+
+  return true;
+};
+
+//validate data when creating or replying a request
+const validateRequestCreation = (request) => {
+  const allowedKeys = ["repository"];
+
+  const result = Object.keys(request).every((key) => allowedKeys.includes(key));
+
+  return result;
+};
+
+const ValidateRequestReply = (request) => {
+  const allowedKeys = ["reply", "status", "request"];
+
+  const result = Object.keys(request).every((key) => allowedKeys.includes(key));
+
+  if (!result || !request.reply || !request.status || !request.request) {
+    return false;
+  } else if (request.status != "aprobado" && request.status != "denegado") {
     return false;
   }
 
@@ -140,4 +165,6 @@ module.exports = {
   validateComment,
   validateRepository,
   validateChangeStatus,
+  validateRequestCreation,
+  ValidateRequestReply,
 };

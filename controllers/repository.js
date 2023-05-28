@@ -39,6 +39,71 @@ const create = async (req, res) => {
     });
 };
 
+//gets an individual repository (only for admins)
+const getRepository = async (req, res) => {
+  //check if the user is an admin
+  if (req.user.role != "admin") {
+    return res.send({
+      status: "error",
+      message: "You are not allowed",
+    });
+  }
+
+  try {
+    let repository = await Repository.findById(req.params.id).select({
+      __v: false,
+    });
+    if (!repository) {
+      return res.send({
+        status: "error",
+        message: "couldn't get repository",
+      });
+    }
+    res.send({
+      status: "success",
+      repository,
+    });
+  } catch {
+    return res.send({
+      status: "error",
+      message: "couldn't get repository",
+    });
+  }
+};
+
+//gets an individual repository (only public repositories)
+const getPublicRepository = async (req, res) => {
+  try {
+    let repository = await Repository.findById(req.params.id).select({
+      __v: false,
+    });
+    if (!repository) {
+      return res.send({
+        status: "error",
+        message: "couldn't get repository",
+      });
+    }
+    if (repository.status != "aprobado") {
+      return res.send({
+        status: "error",
+        message: "this repository isn't public yet",
+      });
+    }
+
+    let repoToReturn = { ...repository._doc };
+    delete repoToReturn.status;
+    res.send({
+      status: "success",
+      repository: repoToReturn,
+    });
+  } catch {
+    return res.send({
+      status: "error",
+      message: "couldn't get repository",
+    });
+  }
+};
+
 //sort repositories by their date, first the most recently uploaded
 const listByDate = (req, res) => {
   //set page
@@ -374,7 +439,7 @@ const listByRate = (req, res) => {
 //list on revision repositories (only for admins)
 const listPendingOnes = (req, res) => {
   //check if the user is an admin
-  if (!req.user.role !== "admin") {
+  if (req.user.role !== "admin") {
     return res.send({
       status: "error",
       message: "You are not allowed",
@@ -437,7 +502,6 @@ const listPendingOnes = (req, res) => {
 
 //approve a repository or not (only for admins)
 const changeState = async (req, res) => {
-  console.log(req.user.role);
   if (req.user.role !== "admin") {
     return res.send({
       status: "error",
@@ -468,7 +532,9 @@ const changeState = async (req, res) => {
 
   return res.send({
     status: "success",
-    message: "el estado se cambió exitosamente a: " + req.body.status,
+    message:
+      "request respondida exitosamente, el estado se cambió exitosamente a: " +
+      req.body.status,
   });
 };
 
@@ -479,4 +545,6 @@ module.exports = {
   listByRate,
   listPendingOnes,
   changeState,
+  getRepository,
+  getPublicRepository,
 };
