@@ -124,9 +124,20 @@ const validateRepository = (repository) => {
   return true;
 };
 
+const validateChangeStatus = (status) => {
+  // ! problem is here
+  if (status != "aprobado" && status != "denegado") {
+    console.log("problem");
+    return false;
+  }
+
+  return true;
+};
+
 module.exports = {
   validateData,
   validateParams,
   validateComment,
   validateRepository,
+  validateChangeStatus,
 };

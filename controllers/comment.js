@@ -4,6 +4,9 @@ const Repository = require("../models/Repository.js");
 // eslint-disable-next-line no-unused-vars
 const pagination = require("mongoose-pagination");
 
+//this is used to update the average rating of a repository
+let newRating = 0;
+
 //create a new comment
 const create = async (req, res) => {
   let identifiedUser = req.user;
@@ -28,12 +31,21 @@ const create = async (req, res) => {
         message: "Repository not found",
       });
     }
+    let comments = await Comment.count({ repository: repo._id });
+    newRating =
+      (repo.average_rating * comments + parseInt(commentData.rate)) /
+      (comments + 1);
   } catch {
     return res.send({
       status: "error",
       message: "Invalid repository",
     });
   }
+
+  await Repository.findOneAndUpdate(
+    { _id: commentData.repository },
+    { average_rating: newRating }
+  );
 
   let comment = new Comment(commentData);
   comment

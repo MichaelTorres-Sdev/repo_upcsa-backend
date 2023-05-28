@@ -22,7 +22,7 @@ const RepositorySchema = Schema({
   },
   status: {
     type: String,
-    deafult: "en revisión",
+    default: "en revisión",
   },
   user: {
     type: Schema.ObjectId,
@@ -31,6 +31,10 @@ const RepositorySchema = Schema({
   created_at: {
     type: Date,
     default: Date.now(),
+  },
+  average_rating: {
+    type: Number,
+    default: 0,
   },
 });
 
