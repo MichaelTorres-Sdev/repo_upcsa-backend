@@ -19,5 +19,4 @@ router.get(
   check.auth,
   repositoryController.listPendingOnes
 );
-router.put("/changeState", check.auth, repositoryController.changeState);
 module.exports = router;

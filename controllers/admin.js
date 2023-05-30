@@ -1,4 +1,5 @@
 const User = require("../models/User.js");
+const { reply } = require("./request.js");
 const bcrypt = require("bcrypt");
 const validate = require("../helpers/validation.js");
 const jwt = require("../helpers/jwt.js");
@@ -202,9 +203,29 @@ const avatar = (req, res) => {
   return res.sendFile(path.resolve(filePath));
 };
 
+//reply a request
+const replyRequest = async (req, res) => {
+  //checks if user is admin
+  if (req.user.role !== "admin") {
+    return res.send({
+      status: "error",
+      message: "You are not allowed",
+    });
+  }
+  try {
+    await reply(req, res);
+  } catch {
+    return res.send({
+      status: "error",
+      message: "Error replying request",
+    });
+  }
+};
+
 module.exports = {
   login,
   profile,
   update,
   avatar,
+  replyRequest,
 };

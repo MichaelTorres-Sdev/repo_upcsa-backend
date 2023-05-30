@@ -5,7 +5,6 @@ const check = require("../middlewares/auth.js");
 const requestController = require("../controllers/request.js");
 
 router.post("/create", check.auth, requestController.create);
-router.put("/reply", check.auth, requestController.reply);
 router.get("/get/:id", check.auth, requestController.getRequest);
 router.get("/getMine/:id", check.auth, requestController.getUserRequest);
 
