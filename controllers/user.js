@@ -18,7 +18,7 @@ const register = async (req, res) => {
   }
 
   //validate data
-  let isValid = await validate.validateData(params);
+  let isValid = validate.validateRegister(params);
   if (!isValid) {
     return res.status(400).send({
       status: "error",

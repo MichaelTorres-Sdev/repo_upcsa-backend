@@ -17,6 +17,39 @@ const validateParams = (params) => {
   return result;
 };
 
+const validateParamsRegister = (params) => {
+  const allowedKeys = ["email", "nick", "password"];
+
+  console.log(params);
+  const result = Object.keys(params).every((key) => allowedKeys.includes(key));
+
+  return result;
+};
+
+const validateRegister = (params) => {
+  if (!validateParamsRegister(params)) {
+    console.log("invalid key detected");
+    return false;
+  }
+
+  let password = validator.isStrongPassword(params.password, {
+    minLength: 8,
+    minLowercase: 1,
+    minUppercase: 1,
+    minSymbols: 1,
+  });
+  let email =
+    !validator.isEmpty(params.email) && validator.isEmail(params.email);
+  let nick =
+    !validator.isEmpty(params.nick) &&
+    validator.isLength(params.nick, { min: 3, max: undefined });
+
+  if (!email || !nick || !password) {
+    return false;
+  }
+  return true;
+};
+
 const validateData = async (params) => {
   if (!validateParams(params)) {
     console.log("invalid key detected");
@@ -167,4 +200,5 @@ module.exports = {
   validateChangeStatus,
   validateRequestCreation,
   ValidateRequestReply,
+  validateRegister,
 };
