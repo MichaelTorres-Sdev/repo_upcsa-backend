@@ -20,7 +20,6 @@ const validateParams = (params) => {
 const validateParamsRegister = (params) => {
   const allowedKeys = ["email", "nick", "password"];
 
-  console.log(params);
   const result = Object.keys(params).every((key) => allowedKeys.includes(key));
 
   return result;
@@ -162,7 +161,6 @@ const validateRepository = (repository) => {
 
 const validateChangeStatus = (status) => {
   if (status != "aprobado" && status != "denegado") {
-    console.log("problem");
     return false;
   }
 
