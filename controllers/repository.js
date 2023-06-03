@@ -104,7 +104,7 @@ const getPublicRepository = async (req, res) => {
   }
 };
 
-//sort repositories by their date, first the most recently uploaded
+//sort repositories by their date and type, first the most recently uploaded
 const listByDate = (req, res) => {
   let type = req.params.type;
   //set page
@@ -142,7 +142,10 @@ const listByDate = (req, res) => {
         }
 
         //count documents and send response
-        Repository.count()
+        Repository.count({
+          status: "aprobado",
+          type: type,
+        })
           .then((total) => {
             return res.status(200).send({
               status: "success",
@@ -192,7 +195,11 @@ const listByDate = (req, res) => {
         }
 
         //count documents and send response
-        Repository.count()
+        Repository.count({
+          tags: { $in: tags },
+          status: "aprobado",
+          type: type,
+        })
           .then((total) => {
             return res.status(200).send({
               status: "success",
@@ -219,7 +226,7 @@ const listByDate = (req, res) => {
   }
 };
 
-//sort repositories by their name
+//sort repositories by their name and type
 const listByName = (req, res) => {
   let type = req.params.type;
   //set page
@@ -240,7 +247,8 @@ const listByName = (req, res) => {
       .select({
         status: false,
       })
-      .sort({ title: "desc" })
+      .collation({ locale: "en", strength: 2 })
+      .sort({ title: "ascending" })
       .populate({
         path: "user",
         select: "nick image",
@@ -255,7 +263,10 @@ const listByName = (req, res) => {
         }
 
         //count documents and send response
-        Repository.count()
+        Repository.count({
+          status: "aprobado",
+          type: type,
+        })
           .then((total) => {
             return res.status(200).send({
               status: "success",
@@ -288,7 +299,8 @@ const listByName = (req, res) => {
       .select({
         status: false,
       })
-      .sort({ title: "desc" })
+      .collation({ locale: "en", strength: 2 })
+      .sort({ title: "ascending" })
       .populate({
         path: "user",
         select: "nick image",
@@ -303,7 +315,11 @@ const listByName = (req, res) => {
         }
 
         //count documents and send response
-        Repository.count()
+        Repository.count({
+          tags: { $in: tags },
+          status: "aprobado",
+          type: type,
+        })
           .then((total) => {
             return res.status(200).send({
               status: "success",
@@ -330,7 +346,7 @@ const listByName = (req, res) => {
   }
 };
 
-//sort repositories by their rate
+//sort repositories by their rate and type
 const listByRate = (req, res) => {
   let type = req.params.type;
   //set page
@@ -368,7 +384,10 @@ const listByRate = (req, res) => {
         }
 
         //count documents and send response
-        Repository.count()
+        Repository.count({
+          status: "aprobado",
+          type: type,
+        })
           .then((total) => {
             return res.status(200).send({
               status: "success",
@@ -418,7 +437,11 @@ const listByRate = (req, res) => {
         }
 
         //count documents and send response
-        Repository.count()
+        Repository.count({
+          tags: { $in: tags },
+          status: "aprobado",
+          type: type,
+        })
           .then((total) => {
             return res.status(200).send({
               status: "success",
@@ -463,11 +486,8 @@ const listPendingOnes = (req, res) => {
 
   //find, sort and paginate repositories
   Repository.find({
-    status: "en revisión",
+    status: "creado",
   })
-    .select({
-      status: false,
-    })
     .populate({
       path: "user",
       select: "nick image",
@@ -482,7 +502,9 @@ const listPendingOnes = (req, res) => {
       }
 
       //count documents and send response
-      Repository.count()
+      Repository.count({
+        status: "creado",
+      })
         .then((total) => {
           return res.status(200).send({
             status: "success",
@@ -582,7 +604,9 @@ const listAllByDate = (req, res) => {
         }
 
         //count documents and send response
-        Repository.count()
+        Repository.count({
+          status: "aprobado",
+        })
           .then((total) => {
             return res.status(200).send({
               status: "success",
@@ -631,7 +655,10 @@ const listAllByDate = (req, res) => {
         }
 
         //count documents and send response
-        Repository.count()
+        Repository.count({
+          tags: { $in: tags },
+          status: "aprobado",
+        })
           .then((total) => {
             return res.status(200).send({
               status: "success",
@@ -677,7 +704,8 @@ const listAllByName = (req, res) => {
       .select({
         status: false,
       })
-      .sort({ title: "desc" })
+      .collation({ locale: "en", strength: 2 })
+      .sort({ title: "ascending" })
       .populate({
         path: "user",
         select: "nick image",
@@ -692,7 +720,9 @@ const listAllByName = (req, res) => {
         }
 
         //count documents and send response
-        Repository.count()
+        Repository.count({
+          status: "aprobado",
+        })
           .then((total) => {
             return res.status(200).send({
               status: "success",
@@ -724,7 +754,8 @@ const listAllByName = (req, res) => {
       .select({
         status: false,
       })
-      .sort({ title: "desc" })
+      .collation({ locale: "en", strength: 2 })
+      .sort({ title: "ascending" })
       .populate({
         path: "user",
         select: "nick image",
@@ -739,7 +770,10 @@ const listAllByName = (req, res) => {
         }
 
         //count documents and send response
-        Repository.count()
+        Repository.count({
+          tags: { $in: tags },
+          status: "aprobado",
+        })
           .then((total) => {
             return res.status(200).send({
               status: "success",
@@ -802,7 +836,9 @@ const listAllByRate = (req, res) => {
         }
 
         //count documents and send response
-        Repository.count()
+        Repository.count({
+          status: "aprobado",
+        })
           .then((total) => {
             return res.status(200).send({
               status: "success",
@@ -851,7 +887,10 @@ const listAllByRate = (req, res) => {
         }
 
         //count documents and send response
-        Repository.count()
+        Repository.count({
+          tags: { $in: tags },
+          status: "aprobado",
+        })
           .then((total) => {
             return res.status(200).send({
               status: "success",
@@ -911,7 +950,10 @@ const searchRepositories = (req, res) => {
       }
 
       //count documents and send response
-      Repository.count()
+      Repository.count({
+        status: "aprobado",
+        title: { $regex: req.body.text, $options: "i" },
+      })
         .then((total) => {
           return res.status(200).send({
             status: "success",
@@ -937,7 +979,111 @@ const searchRepositories = (req, res) => {
     });
 };
 
+const myRepositories = async (req, res) => {
+  //set page
+  let page = req.params.page ? req.params.page : 1;
+
+  //set items per page
+  let itemsPerPage = 5;
+
+  //get tags from body to search realted repositories
+  let tags = req.body.tags;
+
+  //find, sort and paginate repositories
+  if (!tags) {
+    Repository.find({
+      user: req.user.id,
+    })
+      .collation({ locale: "en", strength: 2 })
+      .sort({ title: "ascending" })
+      .populate({
+        path: "user",
+        select: "nick image",
+      })
+      .paginate(page, itemsPerPage)
+      .then((repositories) => {
+        if (!repositories) {
+          return res.status(404).send({
+            status: "error",
+            message: "no repositories found",
+          });
+        }
+
+        //count documents and send response
+        Repository.count({ user: req.user.id })
+          .then((total) => {
+            return res.status(200).send({
+              status: "success",
+              page,
+              itemsPerPage,
+              total,
+              pages: Math.ceil(total / itemsPerPage),
+              repositories,
+            });
+          })
+          .catch(() => {
+            return res.status(500).send({
+              status: "error",
+              message: "Error while counting repositories",
+            });
+          });
+      })
+      .catch(() => {
+        return res.status(500).send({
+          status: "error",
+          message: "couldn't find any repository",
+        });
+      });
+  } else {
+    Repository.find({
+      tags: { $in: tags },
+      user: req.user.id,
+    })
+      .collation({ locale: "en", strength: 2 })
+      .sort({ title: "ascending" })
+      .populate({
+        path: "user",
+        select: "nick image",
+      })
+      .paginate(page, itemsPerPage)
+      .then((repositories) => {
+        if (!repositories) {
+          return res.status(404).send({
+            status: "error",
+            message: "no repositories found",
+          });
+        }
+
+        //count documents and send response
+        Repository.count({ user: req.user.id })
+          .then((total) => {
+            return res.status(200).send({
+              status: "success",
+              page,
+              itemsPerPage,
+              total,
+              pages: Math.ceil(total / itemsPerPage),
+              repositories,
+            });
+          })
+          .catch(() => {
+            return res.status(500).send({
+              status: "error",
+              message: "Error while counting repositories",
+            });
+          });
+      })
+      .catch(() => {
+        return res.status(500).send({
+          status: "error",
+          message: "couldn't find any repository",
+        });
+      });
+  }
+};
+
 module.exports = {
+  myRepositories,
   create,
   listByDate,
   listByName,

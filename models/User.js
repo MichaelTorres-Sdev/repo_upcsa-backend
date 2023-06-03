@@ -17,7 +17,7 @@ const UserSchema = Schema({
   },
   status: {
     type: String,
-    default: "No aprobado",
+    default: "no aprobado",
   },
   description: {
     type: String,

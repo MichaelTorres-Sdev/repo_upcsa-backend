@@ -9,5 +9,6 @@ router.post("/login", userController.login);
 router.get("/profile/:id", check.auth, userController.profile);
 router.put("/update", check.auth, userController.update);
 router.get("/avatar/:file", check.auth, userController.avatar);
+router.put("/changeStatus", check.auth, userController.changeStatus);
 
 module.exports = router;

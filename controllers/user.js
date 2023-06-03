@@ -275,7 +275,35 @@ const avatar = (req, res) => {
   return res.sendFile(path.resolve(filePath));
 };
 
+const changeStatus = async (req, res) => {
+  try {
+    let user = await User.findByIdAndUpdate(
+      req.user.id,
+      { status: "aprobado" },
+      { new: true }
+    ).select({
+      password: false,
+      __v: false,
+    });
+    if (!user) {
+      return res.status(403).send({
+        error: "User not found",
+      });
+    } else {
+      return res.status(200).send({
+        user,
+      });
+    }
+  } catch {
+    return res.status(500).send({
+      status: "error",
+      message: "error updating user state",
+    });
+  }
+};
+
 module.exports = {
+  changeStatus,
   register,
   login,
   profile,

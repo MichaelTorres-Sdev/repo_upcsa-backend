@@ -4,12 +4,12 @@ const router = express.Router();
 const repositoryController = require("../controllers/repository.js");
 const check = require("../middlewares/auth.js");
 
-router.get("/get/:id", check.auth, repositoryController.getRepository);
+/* router.get("/get/:id", check.auth, repositoryController.getRepository);
 router.get(
   "/getRepo/:id",
   check.auth,
   repositoryController.getPublicRepository
-);
+); */
 router.post("/create", check.auth, repositoryController.create);
 router.get(
   "/listByDate/:type/:page?",
@@ -27,11 +27,6 @@ router.get(
   repositoryController.listByRate
 );
 router.get(
-  "/listPending:page?",
-  check.auth,
-  repositoryController.listPendingOnes
-);
-router.get(
   "/listAllByRate/:page?",
   check.auth,
   repositoryController.listAllByRate
@@ -46,11 +41,17 @@ router.get(
   check.auth,
   repositoryController.listAllByName
 );
-
 router.post(
   "/searchByName/:page?",
   check.auth,
   repositoryController.searchRepositories
 );
+router.get("/mine/:page?", check.auth, repositoryController.myRepositories);
+router.get(
+  "/listPending/:page?",
+  check.auth,
+  repositoryController.listPendingOnes
+);
+router.put("/changeStatus", check.auth, repositoryController.changeState);
 
 module.exports = router;
