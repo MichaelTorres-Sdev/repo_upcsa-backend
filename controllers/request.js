@@ -14,7 +14,7 @@ const create = async (req, res) => {
   //validate request params
   let isValidRequest = validateRequestCreation(requestData);
   if (!isValidRequest) {
-    return res.send({
+    return res.status(403).send({
       status: "error",
       message: "Invalid request",
     });
@@ -24,13 +24,13 @@ const create = async (req, res) => {
   try {
     let repo = Repository.findById(requestData.repository);
     if (!repo) {
-      return res.send({
+      return res.status(404).send({
         status: "error",
         message: "repository not found",
       });
     }
   } catch {
-    return res.send({
+    return res.status(500).send({
       status: "error",
       message: "error validating repository",
     });
@@ -43,13 +43,13 @@ const create = async (req, res) => {
   request
     .save()
     .then(() => {
-      return res.send({
+      return res.status(200).send({
         status: "success",
         message: "request saved successfully",
       });
     })
     .catch(() => {
-      return res.send({
+      return res.status(500).send({
         status: "error",
         message: "error saving request",
       });
@@ -60,7 +60,7 @@ const create = async (req, res) => {
 const getRequest = async (req, res) => {
   //checks if user is admin
   if (req.user.role !== "admin") {
-    return res.send({
+    return res.status(403).send({
       status: "error",
       message: "You are not allowed",
     });
@@ -69,17 +69,17 @@ const getRequest = async (req, res) => {
   try {
     let request = await Request.findById(req.params.id);
     if (!request) {
-      return res.send({
+      return res.status(404).send({
         status: "error",
         message: "request not found",
       });
     }
-    return res.send({
+    return res.status(200).send({
       status: "success",
       request,
     });
   } catch {
-    return res.send({
+    return res.status(500).send({
       status: "error",
       message: "error getting request",
     });
@@ -94,14 +94,14 @@ const getUserRequest = async (req, res) => {
       __v: false,
     });
     if (!request) {
-      return res.send({
+      return res.status(404).send({
         status: "error",
         message: "request not found",
       });
     }
 
     if (request.user != req.user.id) {
-      return res.send({
+      return res.status(403).send({
         status: "error",
         message: "you are not allowed to access this",
       });
@@ -109,12 +109,12 @@ const getUserRequest = async (req, res) => {
 
     let requestToReturn = { ...request._doc };
     delete requestToReturn.user;
-    return res.send({
+    return res.status(200).send({
       status: "success",
       request: requestToReturn,
     });
   } catch {
-    return res.send({
+    return res.status(500).send({
       status: "error",
       message: "error getting request",
     });
@@ -125,7 +125,7 @@ const getUserRequest = async (req, res) => {
 const reply = async (req, res) => {
   //checks if user is admin
   if (req.user.role !== "admin") {
-    return res.send({
+    return res.status(403).send({
       status: "error",
       message: "You are not allowed",
     });
@@ -139,7 +139,7 @@ const reply = async (req, res) => {
   });
 
   if (!data) {
-    return res.send({
+    return res.status(400).send({
       status: "error",
       message: "invalid params",
     });
@@ -156,7 +156,7 @@ const reply = async (req, res) => {
     //validate repository
     let repo = await Repository.findById(req.body.repository);
     if (!repo) {
-      return res.send({
+      return res.status(500).send({
         status: "error",
         message: "could not find repository",
       });
@@ -171,7 +171,7 @@ const reply = async (req, res) => {
     //changes the status of the repository
     await changeState(req, res);
   } catch {
-    return res.send({
+    return res.status(500).send({
       status: "error",
       message: "error replying request",
     });

@@ -15,7 +15,7 @@ const create = async (req, res) => {
   //validate comment data
   let isValidComment = validateComment(commentData);
   if (!isValidComment) {
-    return res.send({
+    return res.status(400).send({
       status: "error",
       message: "Invalid comment",
     });
@@ -26,7 +26,7 @@ const create = async (req, res) => {
   try {
     let repo = await Repository.findById(commentData.repository);
     if (!repo) {
-      return res.send({
+      return res.status(404).send({
         status: "error",
         message: "Repository not found",
       });
@@ -36,9 +36,9 @@ const create = async (req, res) => {
       (repo.average_rating * comments + parseInt(commentData.rate)) /
       (comments + 1);
   } catch {
-    return res.send({
+    return res.status(500).send({
       status: "error",
-      message: "Invalid repository",
+      message: "Error finding repository",
     });
   }
 
@@ -51,13 +51,13 @@ const create = async (req, res) => {
   comment
     .save()
     .then(() => {
-      return res.send({
+      return res.status(200).send({
         status: "success",
         message: "comment saved successfully",
       });
     })
     .catch(() => {
-      return res.send({
+      return res.status(500).send({
         status: "error",
         message: "couldn't save comment",
       });

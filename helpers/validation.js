@@ -23,12 +23,12 @@ const validateData = async (params) => {
     return false;
   }
 
-  let password = validator.isStrongPassword(params.password, {
+  /* let password = validator.isStrongPassword(params.password, {
     minLength: 8,
     minLowercase: 1,
     minUppercase: 1,
     minSymbols: 1,
-  });
+  }); */
   let email =
     !validator.isEmpty(params.email) && validator.isEmail(params.email);
   let nick =
@@ -64,7 +64,7 @@ const validateData = async (params) => {
     if (params.image) {
       image = await validateImage;
     }
-    if (!password || !email || !nick || !notifications || !image) {
+    if (!email || !nick || !notifications || !image) {
       return false;
     }
     return true;

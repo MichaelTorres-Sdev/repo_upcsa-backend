@@ -11,7 +11,7 @@ const register = async (req, res) => {
   let params = req.body;
 
   if (!params.email || !params.password || !params.nick) {
-    return res.send({
+    return res.status(400).send({
       status: "error",
       message: "couldn't get user data",
     });
@@ -20,7 +20,7 @@ const register = async (req, res) => {
   //validate data
   let isValid = await validate.validateData(params);
   if (!isValid) {
-    return res.send({
+    return res.status(400).send({
       status: "error",
       message: "couldn't validate user data",
     });
@@ -36,7 +36,7 @@ const register = async (req, res) => {
     });
 
     if (users && users.length >= 1) {
-      return res.status(200).send({
+      return res.status(400).send({
         status: "error",
         message: "user already exists",
       });
@@ -48,7 +48,7 @@ const register = async (req, res) => {
     //creating user object
     params.password = pwd;
   } catch {
-    return res.send({
+    return res.status(400).send({
       status: "error",
       message: "couldn't validate user",
     });
@@ -59,13 +59,13 @@ const register = async (req, res) => {
   user
     .save()
     .then(() => {
-      return res.send({
+      return res.status(200).send({
         status: "success",
         message: "user created successfully",
       });
     })
     .catch(() => {
-      return res.send({
+      return res.status(400).send({
         status: "error",
         message: "couldn't save user",
       });
@@ -85,6 +85,7 @@ const login = async (req, res) => {
   }
 
   //find the user in the database
+  let userToReturn;
   try {
     let user = await User.findOne({
       email: params.email,
@@ -97,6 +98,7 @@ const login = async (req, res) => {
       });
     }
 
+    userToReturn = user._doc;
     //check password
     const pwd = bcrypt.compareSync(params.password, user.password);
 
@@ -110,13 +112,17 @@ const login = async (req, res) => {
     //get JWT token
     const token = jwt.createToken(user);
 
+    delete userToReturn.password;
+    delete userToReturn.__v;
+
     //return token
     return res.status(200).send({
       status: "success",
       token,
+      user: userToReturn,
     });
   } catch {
-    return res.status(400).send({
+    return res.status(500).send({
       status: "error",
       message: "error finding user",
     });
@@ -170,7 +176,7 @@ const update = async (req, res) => {
   //make sure user only can modify modifiable data and validate userToUpdate data
   let isValid = await validate.validateData(userToUpdate);
   if (!isValid) {
-    return res.send({
+    return res.status(400).send({
       status: "error",
       message: "couldn't validate user data",
     });
@@ -189,8 +195,8 @@ const update = async (req, res) => {
     });
 
     if (userIsSet) {
-      return res.status(200).send({
-        status: "success",
+      return res.status(400).send({
+        status: "error",
         message: "user already exists",
       });
     }
@@ -232,7 +238,7 @@ const update = async (req, res) => {
     return res.status(200).send({
       status: "success",
       message: "user updated successfully",
-      updatedUser,
+      user: updatedUser,
     });
   } catch {
     return res.status(500).send({
